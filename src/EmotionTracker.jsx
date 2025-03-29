@@ -466,42 +466,75 @@ const getAllEmotions = () => {
       {/* Сітка емоцій */}
       {gridView && !showStats && !showDescription && (
         <div className="absolute inset-0 overflow-hidden" style={{ top: '76px', bottom: '72px' }}>
-          {allEmotions.map((emotion, index) => {
-  const size = getEmotionSize(emotion);
-  return (
-    <motion.div
-      key={`${emotion.name}-${index}`}
-      className={`absolute rounded-full flex items-center justify-center cursor-pointer bg-gradient-to-br ${emotionsByQuadrant[emotion.quadrant].color} select-none`}
-      style={{
-        left: `${emotion.x * 80}px`,
-        top: `${emotion.y * 80}px`,
-        width: `${size}px`,
-        height: `${size}px`,
-        fontSize: emotion.type === "main" ? '16px' : '14px',
-        fontWeight: emotion.type === "main" ? 'bold' : 'normal',
-        zIndex: emotion.type === "main" ? 2 : 1,
-        filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))'
-      }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={() => handleGridEmotionSelect(emotion)}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ 
-        opacity: 1, 
-        scale: 1,
-        transition: { 
-          delay: index * 0.01,
-          type: "spring",
-          stiffness: 300,
-          damping: 20
-        }
-      }}
-    >
-      <span className="text-center px-2">{emotion.name}</span>
-      {/* Removed pulsating animation div */}
-    </motion.div>
-  );
-})}
+          <motion.div 
+            className="absolute w-800 h-800"
+            style={{ 
+              width: '800px',
+              height: '800px',
+              x: position.x,
+              y: position.y
+            }}
+            drag
+            dragConstraints={{ 
+              left: -600, 
+              right: 600, 
+              top: -600, 
+              bottom: 600 
+            }}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+          >
+            {allEmotions.map((emotion, index) => {
+              const size = getEmotionSize(emotion);
+              return (
+                <motion.div
+                  key={`${emotion.name}-${index}`}
+                  className={`absolute rounded-full flex items-center justify-center cursor-pointer bg-gradient-to-br ${emotionsByQuadrant[emotion.quadrant].color} select-none`}
+                  style={{
+                    left: `${emotion.x * 80}px`,
+                    top: `${emotion.y * 80}px`,
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    fontSize: emotion.type === "main" ? '16px' : '14px',
+                    fontWeight: emotion.type === "main" ? 'bold' : 'normal',
+                    zIndex: emotion.type === "main" ? 2 : 1,
+                    filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))'
+                  }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleGridEmotionSelect(emotion)}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1,
+                    transition: { 
+                      delay: index * 0.01,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20
+                    }
+                  }}
+                >
+                  <span className="text-center px-2">{emotion.name}</span>
+                  
+                  {/* Анімований привид-фон */}
+                  <motion.div 
+                    className={`absolute inset-0 rounded-full opacity-40 bg-gradient-to-br ${emotionsByQuadrant[emotion.quadrant].color}`}
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      opacity: [0.4, 0.2, 0.4]
+                    }}
+                    transition={{ 
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      duration: 3 + Math.random() * 2
+                    }}
+                    style={{ zIndex: -1 }}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
           
           {/* Індикатор поточного вибору або підказка */}
           {selectedEmotion && !showDescription && (
