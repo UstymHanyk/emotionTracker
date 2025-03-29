@@ -517,20 +517,7 @@ const getAllEmotions = () => {
                 >
                   <span className="text-center px-2">{emotion.name}</span>
                   
-                  {/* Анімований привид-фон */}
-                  <motion.div 
-                    className={`absolute inset-0 rounded-full opacity-40 bg-gradient-to-br ${emotionsByQuadrant[emotion.quadrant].color}`}
-                    animate={{ 
-                      scale: [1, 1.3, 1],
-                      opacity: [0.4, 0.2, 0.4]
-                    }}
-                    transition={{ 
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      duration: 3 + Math.random() * 2
-                    }}
-                    style={{ zIndex: -1 }}
-                  />
+                  
                 </motion.div>
               );
             })}
